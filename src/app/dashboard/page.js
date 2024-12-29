@@ -2,12 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import {DoctorsGrid} from "../../component/Doctor";
 
 const Dashboard = () => {
     const [userData, setUserData] = useState(null);
     const [error, setError] = useState('');
     const [message, setMessage] = useState('');
-
+    const [doctors, setDoctors] = useState([]);
+    const [loading, setLoading] = useState(true);
+  
     // Fetch AuthUser Email
     const fetchAuthUserEmail = async () => {
         try {
@@ -74,9 +77,25 @@ const Dashboard = () => {
         fetchUserData();
     }, []); // Only run once when component mounts
 
+    useEffect(() => {
+        const fetchDoctors = async () => {
+          try {
+            const response = await axios.get('/api/doctors');
+            setDoctors(response.data.data);
+            setLoading(false);
+          } catch (err) {
+            setError(err.message);
+            setLoading(false);
+          }
+        };
+    
+        fetchDoctors();
+      }, []);
+      console.log(doctors)
+  
     return (
         <div className="p-4">
-            <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
+            {/* <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
             {error && <p className="text-red-500">{error}</p>}
             {message && <p className="text-green-500">{message}</p>}
             
@@ -95,7 +114,8 @@ const Dashboard = () => {
                 </div>
             ) : (
                 <p>Loading user data...</p>
-            )}
+            )} */}
+            <DoctorsGrid doctors={doctors} />
         </div>
     );
 };

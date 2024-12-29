@@ -30,6 +30,7 @@ export async function GET(req) {
         // Return user details with default values
         return new Response(
             JSON.stringify({
+                Id:user._id,
                 userId: user.userId,
                 name: user.name,
                 username: user.username,
