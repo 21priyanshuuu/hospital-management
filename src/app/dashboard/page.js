@@ -56,7 +56,7 @@ const Dashboard = () => {
                 username: userData.username,
                 email: userData.email,
                 phone: userData.phone || '',
-                wallet: userData.wallet || 0,
+                wallet: userData.wallet ,
                 isAdmin: userData.isAdmin || false,
                 role: userData.role || 'patient',
             });

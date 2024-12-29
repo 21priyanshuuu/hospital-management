@@ -2,7 +2,6 @@ import { connectDB } from '../../../lib/mongodb';
 import AuthUser from '../../../models/AuthUser';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 
-// GET: Fetch user details, create if not exists
 export async function GET() {
     try {
         const { isAuthenticated, getUser } = getKindeServerSession();

@@ -1,5 +1,5 @@
-import { connectDB } from '@/lib/mongodb';
-import DUser from '@/models/User';
+import { connectDB } from '../../../lib/mongodb';
+import DUser from '../../../models/UserModel';
 
 export async function POST(req) {
     const { userId, amount } = await req.json();

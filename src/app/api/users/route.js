@@ -1,64 +1,3 @@
-// import { connectDB } from '../../../lib/mongodb';
-// import DUser from '../../../models/UserModel';
-
-// export async function POST(req) {
-//     try {
-//         // Establish MongoDB connection
-//         await connectDB();
-
-//         // Parse the request body using await req.json()
-//         const { username, email, password, img, isAdmin, phone, address, wallet, role } = await req.json();
-
-//         // Validate role
-//         if (!['patient', 'doctor'].includes(role)) {
-//             return new Response(
-//                 JSON.stringify({ error: 'Invalid role. Must be "patient" or "doctor".' }),
-//                 { status: 400 }
-//             );
-//         }
-
-//         // Check if the user already exists by email
-//         const existingUser = await DUser.findOne({ email });
-//         if (existingUser) {
-//             return new Response(
-//                 JSON.stringify({ error: 'User already exists with this email.' }),
-//                 { status: 400 }
-//             );
-//         }
-
-//         const newUser = new DUser({
-//             username,
-//             email,
-//             password,    
-//             img,
-//             isAdmin: isAdmin || false,  
-//             phone,
-//             address,
-//             wallet: wallet || 0,
-//             role,
-//         });
-
-//         // Save the new user to the database
-//         await newUser.save();
-
-//         // Return success message with the new user object
-//         return new Response(
-//             JSON.stringify({ message: 'User created successfully', user: newUser }),
-//             { status: 201 }
-//         );
-//     } catch (error) {
-//         // Handle any errors that occur
-//         return new Response(
-//             JSON.stringify({ error: error.message }),
-//             { status: 500 }
-//         );
-//     }
-// }
-
-
-
-
-
 import { connectDB } from '../../../lib/mongodb';
 import AuthUser from '../../../models/AuthUser';
 import DUser from '../../../models/UserModel';
@@ -163,3 +102,59 @@ export async function POST(req) {
     }
 }
 
+
+export async function PUT(req) {
+    try {
+        await connectDB(); // Ensure MongoDB connection
+
+        const { email, wallet } = await req.json();
+
+        // Validate email and wallet
+        if (!email || wallet === undefined) {
+            return new Response(
+                JSON.stringify({ error: 'Email and wallet are required' }),
+                { status: 400 }
+            );
+        }
+
+        // Check if the user exists by email
+        const existingUser = await DUser.findOne({ email });
+        if (!existingUser) {
+            return new Response(
+                JSON.stringify({ error: 'User does not exist with this email' }),
+                { status: 404 }
+            );
+        }
+
+        // Update the wallet
+        let amount=existingUser.wallet;
+        existingUser.wallet = wallet+amount;
+
+        // Save the updated user
+        await existingUser.save();
+
+        // Return the updated user data
+        return new Response(
+            JSON.stringify({
+                message: 'User wallet updated successfully',
+                user: {
+                    userId: existingUser.userId,
+                    name: existingUser.name,
+                    username: existingUser.username,
+                    email: existingUser.email,
+                    phone: existingUser.phone,
+                    wallet: existingUser.wallet,
+                    isAdmin: existingUser.isAdmin,
+                    role: existingUser.role,
+                },
+            }),
+            { status: 200 }
+        );
+    } catch (error) {
+        console.error('PUT Error:', error);
+        return new Response(
+            JSON.stringify({ error: error.message }),
+            { status: 500 }
+        );
+    }
+}
