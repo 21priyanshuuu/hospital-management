@@ -5,7 +5,8 @@ const appointmentSchema = new mongoose.Schema({
     doctorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     amount: Number,
     discountApplied: { type: Boolean, default: false },
-    createdAt: { type: Date, default: Date.now }
+    createdAt: { type: Date, default: Date.now },
+    timeSlot: { type: Date}
 });
 
 export default mongoose.models.Appointment || mongoose.model('Appointment', appointmentSchema);

@@ -1,4 +1,3 @@
-// api/appointment/route.js
 import { connectDB } from '../../../lib/mongodb';
 import Appointment from '../../../models/Appointment';
 import DUser from '../../../models/UserModel';
@@ -16,7 +15,6 @@ export async function POST(req) {
             );
         }
 
-        // Find the user by email to get the MongoDB _id
         const user = await DUser.findOne({ email });
         if (!user) {
             return new Response(
@@ -31,9 +29,8 @@ export async function POST(req) {
             );
         }
 
-        // Create a new appointment
         const newAppointment = new Appointment({
-            patientId: user._id, // Use MongoDB _id
+            patientId: user._id, 
             doctorId,
             date,
             timeSlot,
